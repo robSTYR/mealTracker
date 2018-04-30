@@ -9,5 +9,6 @@ class Input extends tabris_1.TextInput {
     set _text(text) {
         this.text = text;
     }
+    ;
 }
 exports.default = Input;

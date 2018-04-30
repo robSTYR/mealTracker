@@ -3,6 +3,8 @@ import * as moment from 'moment';
 import AppComposite from '../components/composite';
 import Input from '../components/textInput';
 import AddMealButton from '../components/button';
+import MealInput from "../components/mealInput";
+import {categoryTypes} from "./dailySummary";
 
 const renderSuccessMessage = () => {
     dinnertextView.text = 'Your meal has been added to the Daily Summary \u2705';
@@ -41,47 +43,16 @@ let dinnertextView: TextView = new TextView({
     text: 'Enter what you ate for Dinner, each item separated by a comma'
 }).appendTo(dinnerComposite);
 
-let dinnerMealInput = new Input('prev() 10', 15, 15, 30, 'What did you eat?', true, "send", (text) => {
+let dinnerMealInput = new MealInput('prev() 10', 15, 15, 30, 'What did you eat?', dinnertextView, true, "send", (text) => {
     let userInput: string = text;
-    let now = moment().format('LLLL');
-    if (userInput.length >= 3) {
-        localStorage.clear();
-
-        localStorage.setItem('Dinner', `${userInput}`);
-        renderSuccessMessage();
-        setTimeout(resetInputFeedback, 3000)
-    } else {
-        renderFailedSaveInfo();
-        setTimeout(resetInputFeedback, 3000)
-    }
+    dinnerMealInput.saveData(categoryTypes.dinner, dinnertextView, userInput);
 }).appendTo(dinnerComposite);
 
 let addDinnerButton = new AddMealButton('dinnerButton', 'Add My Dinner', '#ffffff', '#1cef71', 2, 2, 'prev() 20', () => {
     let dinner: string = dinnerMealInput.text;
-    if (dinner.length >= 3) {
-        localStorage.clear();
-
-        localStorage.setItem('Dinner', `${dinner}`);
-        renderSuccessMessage();
-        setTimeout(resetInputFeedback, 3000);
-    } else {
-        renderFailedSaveInfo();
-        setTimeout(resetInputFeedback, 3000);
-    }
+    dinnerMealInput.saveData(categoryTypes.dinner, dinnertextView, dinner);
 }).appendTo(dinnerComposite);
 
 
-const fetchData = (text: string): void => {
-    fetch(`https://trackapi.nutritionix.com/v2/search/instant?query=${text}`,
-        {
-            headers: {
-                "x-app-id": "99853ada",
-                "x-app-key": "eabf89a4f19c90c12ee26bbe9807d9b4"
-            }
-        }).then(response => response.json())
-        .then((json) => {
-            console.log(json.branded);
-        });
-};
 
 export default dinnerComposite;

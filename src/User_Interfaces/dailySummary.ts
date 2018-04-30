@@ -1,18 +1,14 @@
 import {CollectionView, TextView, ImageView, ui} from "tabris";
-import * as moment from 'moment';
-import axios from 'axios';
-import AddMealButton from '../components/button';
-import Input from '../components/textInput';
+
 import AppComposite from "../components/composite";
 
-
-
-enum categoryTypes {
+export enum categoryTypes {
     breakfast = 'Breakfast',
     lunch = 'Lunch',
     dinner = 'Dinner',
     dessert = 'Dessert',
 };
+let foodDataArr: [{name: string, cals: number}];
 
 
 let dataFromStorage;
@@ -25,7 +21,6 @@ const grabDataFromStorage = (searchTerm: string): string => {
 const fetchDataFromApi = (text: string)  => {
     let foodName;
     let calories;
-    let foodDataArr: [{name: string, cals: number}];
     fetch(`https://trackapi.nutritionix.com/v2/search/instant?query=${text}`,
         {
             headers: {
@@ -43,9 +38,13 @@ const fetchDataFromApi = (text: string)  => {
             foodObj.name = foodName;
             foodObj.cals = calories;
             foodDataArr.push(foodObj);
-            console.log(foodDataArr);
             return foodDataArr;
-        });
+        }).then(() => {
+        let dataCollecionView = new CollectionView({
+            left: 0, top: 'prev() 10', right: 0, bottom: '0',
+            itemCount: foodDataArr.length;
+    })
+    });
 };
 
 let breakfastFoodFromStorage = grabDataFromStorage(categoryTypes.breakfast);
@@ -56,7 +55,6 @@ fetchDataFromApi(breakfastFoodFromStorage);
 fetchDataFromApi(dinnerFromStorage);
 fetchDataFromApi(lunchFromStorage);
 fetchDataFromApi(dessertFromStorage);
-
 
 let dailySummaryComposite = new AppComposite(0, 0, 0, 0, '#ffffff');
 

@@ -8,8 +8,9 @@ var categoryTypes;
     categoryTypes["lunch"] = "Lunch";
     categoryTypes["dinner"] = "Dinner";
     categoryTypes["dessert"] = "Dessert";
-})(categoryTypes || (categoryTypes = {}));
+})(categoryTypes = exports.categoryTypes || (exports.categoryTypes = {}));
 ;
+let foodDataArr;
 let dataFromStorage;
 const grabDataFromStorage = (searchTerm) => {
     dataFromStorage = localStorage.getItem(searchTerm);
@@ -19,7 +20,6 @@ const grabDataFromStorage = (searchTerm) => {
 const fetchDataFromApi = (text) => {
     let foodName;
     let calories;
-    let foodDataArr;
     fetch(`https://trackapi.nutritionix.com/v2/search/instant?query=${text}`, {
         headers: {
             "x-app-id": "99853ada",
@@ -36,8 +36,12 @@ const fetchDataFromApi = (text) => {
         foodObj.name = foodName;
         foodObj.cals = calories;
         foodDataArr.push(foodObj);
-        console.log(foodDataArr);
         return foodDataArr;
+    }).then(() => {
+        let dataCollecionView = new tabris_1.CollectionView({
+            left: 0, top: 'prev() 10', right: 0, bottom: '0',
+            itemCount: foodDataArr.length
+        });
     });
 };
 let breakfastFoodFromStorage = grabDataFromStorage(categoryTypes.breakfast);

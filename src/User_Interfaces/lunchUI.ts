@@ -1,25 +1,8 @@
 import {ImageView, TextView} from "tabris";
-import * as moment from 'moment';
 import AppComposite from '../components/composite';
-import Input from '../components/textInput';
 import AddMealButton from '../components/button';
-
-const renderSuccessMessage = () => {
-    lunchTextView.text = 'Your meal has been added to the Daily Summary\u2705';
-    lunchMealInput.borderColor = '#1cef71';
-
-};
-
-const renderFailedSaveInfo = () => {
-    lunchMealInput.borderColor = '#ff0c18';
-    lunchTextView.text = 'Please add a meal with at least 3 letters!';
-};
-
-const resetInputFeedback = () => {
-    lunchMealInput.text = '';
-    lunchMealInput.borderColor = '#efefef';
-    lunchTextView.text = 'Enter what you ate for lunch, each item separated by a comma.';
-};
+import MealInput from "../components/mealInput";
+import {categoryTypes} from "./dailySummary";
 
 let lunchComposite = new AppComposite(0, 0, 0, 0, '#ffffff');
 
@@ -40,29 +23,14 @@ let lunchTextView: TextView = new TextView({
     text: 'Enter what you ate for lunch, each item separated by a comma.'
 }).appendTo(lunchComposite);
 
-let lunchMealInput = new Input('prev() 10', 15, 15, 30, 'What did you eat for lunch?', true, "send", (text: string) => {
+let lunchMealInput = new MealInput('prev() 10', 15, 15, 30, 'What did you eat for lunch?', lunchTextView, true, "send", (text: string) => {
     let userInput: string = text;
-    let now = moment().format('LLLL');
-    if (userInput.length >= 3) {
-        localStorage.setItem('Lunch', `${userInput}`);
-        renderSuccessMessage();
-        resetInputFeedback();
-    }
-    else {
-        renderFailedSaveInfo();
-        resetInputFeedback();
-    }
+    lunchMealInput.saveData(categoryTypes.lunch, lunchTextView, userInput);
 }).appendTo(lunchComposite);
 
 let addLunchButton = new AddMealButton('lunchButton', 'Add My Lunch', '#ffffff', '#1cef71', 2, 2, 'prev() 20', () => {
     let lunch: string = lunchMealInput.text;
-    if (lunch.length >= 3) {
-        localStorage.clear();
-        localStorage.setItem('Lunch', `${lunch}`);
-        resetInputFeedback();
-    } else {
-        throw new Error('Please add a food that has at least three letters')
-    };
+    lunchMealInput.saveData(categoryTypes.lunch, lunchTextView, lunch);
 }).appendTo(lunchComposite);
 
 export default lunchComposite;
