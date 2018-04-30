@@ -34,14 +34,12 @@ let breakfastTextView = new tabris_1.TextView({
     alignment: 'center',
     text: 'Enter what you ate for breakfast, each item separated by a comma'
 }).appendTo(breakfastComposite);
-// ----------------------------------------
-// breakfast meal instance of Input class
-// _______________________________________
 let breakfastMealInput = new textInput_1.default('prev() 10', 15, 15, 30, 'What did you eat?', true, "send", (text) => {
     let userInput = text;
-    let now = moment().format('MMM Do YY');
+    let now = moment().format('LLLL');
     if (userInput.length >= 3) {
-        localStorage.setItem(`Breakfast - ${now}`, `${userInput}`);
+        localStorage.clear();
+        localStorage.setItem(`Breakfast`, `${userInput}`);
         renderSuccessMessage();
         setTimeout(resetInputFeedback, 300);
     }
@@ -50,14 +48,11 @@ let breakfastMealInput = new textInput_1.default('prev() 10', 15, 15, 30, 'What 
         setTimeout(resetInputFeedback, 3000);
     }
 }).appendTo(breakfastComposite);
-// --------------------------------------------------
-// addBreakfastbutton instance of AddMealButton class
-//____________________________________________________
 let addBreakfastbutton = new button_1.default('breakfastButton', 'Add My Breakfast', '#ffffff', '#1cef71', 2, 2, 'prev() 20', () => {
     let breakfast = breakfastMealInput.text;
-    let now = moment().format('LLLL');
     if (breakfast.length >= 3) {
-        localStorage.setItem(`Breakfast - ${now}`, `${breakfast}`);
+        localStorage.clear();
+        localStorage.setItem(`Breakfast`, `${breakfast}`);
         renderSuccessMessage();
         setTimeout(resetInputFeedback, 3000);
     }

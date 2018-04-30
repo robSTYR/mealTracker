@@ -43,9 +43,11 @@ let dinnertextView: TextView = new TextView({
 
 let dinnerMealInput = new Input('prev() 10', 15, 15, 30, 'What did you eat?', true, "send", (text) => {
     let userInput: string = text;
-    let now = moment().format('MMM Do YY');
+    let now = moment().format('LLLL');
     if (userInput.length >= 3) {
-        localStorage.setItem(`Dinner - ${now}`, `${userInput}`);
+        localStorage.clear();
+
+        localStorage.setItem('Dinner', `${userInput}`);
         renderSuccessMessage();
         setTimeout(resetInputFeedback, 3000)
     } else {
@@ -57,8 +59,9 @@ let dinnerMealInput = new Input('prev() 10', 15, 15, 30, 'What did you eat?', tr
 let addDinnerButton = new AddMealButton('dinnerButton', 'Add My Dinner', '#ffffff', '#1cef71', 2, 2, 'prev() 20', () => {
     let dinner: string = dinnerMealInput.text;
     if (dinner.length >= 3) {
-        let now = moment().format('MMM Do YY');
-        localStorage.setItem(`Dinner - ${now}`, `${dinner}`);
+        localStorage.clear();
+
+        localStorage.setItem('Dinner', `${dinner}`);
         renderSuccessMessage();
         setTimeout(resetInputFeedback, 3000);
     } else {

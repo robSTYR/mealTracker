@@ -40,7 +40,8 @@ let dessertInput = new textInput_1.default('prev() 10', 15, 15, 30, 'What did yo
     let userInput = text;
     let now = moment().format('LLLL');
     if (userInput.length >= 3) {
-        localStorage.setItem(`Dessert - ${now}`, `${userInput}`);
+        localStorage.clear();
+        localStorage.setItem(`Dessert`, `${userInput}`);
         renderSuccessMessage();
         setTimeout(resetInputFeedback, 300);
     }
@@ -53,7 +54,8 @@ let addDessertButton = new button_1.default('DessertButton', 'Add My Dessert', '
     let dessert = dessertInput.text;
     let now = moment().format('LLLL');
     if (dessert.length >= 3) {
-        localStorage.setItem(`Dessert - ${now}`, `${dessert}`);
+        localStorage.clear();
+        localStorage.setItem(`Dessert`, `${dessert}`);
         renderSuccessMessage();
         setTimeout(resetInputFeedback, 300);
     }

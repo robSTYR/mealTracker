@@ -37,9 +37,10 @@ let dinnertextView = new tabris_1.TextView({
 }).appendTo(dinnerComposite);
 let dinnerMealInput = new textInput_1.default('prev() 10', 15, 15, 30, 'What did you eat?', true, "send", (text) => {
     let userInput = text;
-    let now = moment().format('MMM Do YY');
+    let now = moment().format('LLLL');
     if (userInput.length >= 3) {
-        localStorage.setItem(`Dinner - ${now}`, `${userInput}`);
+        localStorage.clear();
+        localStorage.setItem('Dinner', `${userInput}`);
         renderSuccessMessage();
         setTimeout(resetInputFeedback, 3000);
     }
@@ -51,8 +52,8 @@ let dinnerMealInput = new textInput_1.default('prev() 10', 15, 15, 30, 'What did
 let addDinnerButton = new button_1.default('dinnerButton', 'Add My Dinner', '#ffffff', '#1cef71', 2, 2, 'prev() 20', () => {
     let dinner = dinnerMealInput.text;
     if (dinner.length >= 3) {
-        let now = moment().format('MMM Do YY');
-        localStorage.setItem(`Dinner - ${now}`, `${dinner}`);
+        localStorage.clear();
+        localStorage.setItem('Dinner', `${dinner}`);
         renderSuccessMessage();
         setTimeout(resetInputFeedback, 3000);
     }

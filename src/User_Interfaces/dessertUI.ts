@@ -48,7 +48,8 @@ let dessertInput = new Input('prev() 10', 15, 15, 30, 'What did you treat yourse
     let userInput: string = text;
     let now = moment().format('LLLL');
     if (userInput.length >= 3) {
-        localStorage.setItem(`Dessert - ${now}`, `${userInput}`);
+        localStorage.clear();
+        localStorage.setItem(`Dessert`, `${userInput}`);
         renderSuccessMessage();
         setTimeout(resetInputFeedback, 300)
     } else {
@@ -61,7 +62,9 @@ let addDessertButton = new AddMealButton('DessertButton', 'Add My Dessert', '#ff
     let dessert: string = dessertInput.text;
     let now = moment().format('LLLL');
     if (dessert.length >= 3) {
-        localStorage.setItem(`Dessert - ${now}`, `${dessert}`);
+        localStorage.clear();
+
+        localStorage.setItem(`Dessert`, `${dessert}`);
         renderSuccessMessage();
         setTimeout(resetInputFeedback, 300)
     } else {
@@ -69,6 +72,5 @@ let addDessertButton = new AddMealButton('DessertButton', 'Add My Dessert', '#ff
         setTimeout(resetInputFeedback, 3000)
     }
 }).appendTo(dessertComposite);
-
 
 export default dessertComposite;

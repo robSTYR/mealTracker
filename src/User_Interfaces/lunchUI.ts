@@ -42,9 +42,9 @@ let lunchTextView: TextView = new TextView({
 
 let lunchMealInput = new Input('prev() 10', 15, 15, 30, 'What did you eat for lunch?', true, "send", (text: string) => {
     let userInput: string = text;
-    let now = moment().format('MMM Do YY');
+    let now = moment().format('LLLL');
     if (userInput.length >= 3) {
-        localStorage.setItem(`Lunch - ${now}`, `${userInput}`);
+        localStorage.setItem('Lunch', `${userInput}`);
         renderSuccessMessage();
         resetInputFeedback();
     }
@@ -56,11 +56,13 @@ let lunchMealInput = new Input('prev() 10', 15, 15, 30, 'What did you eat for lu
 
 let addLunchButton = new AddMealButton('lunchButton', 'Add My Lunch', '#ffffff', '#1cef71', 2, 2, 'prev() 20', () => {
     let lunch: string = lunchMealInput.text;
-    let now = moment().format('LLLL');
     if (lunch.length >= 3) {
-        localStorage.setItem(`Lunch - ${now}`, `${lunch}`);
-        lunchMealInput._text = '';
-    } else throw new Error('Please add a food that has at least three letters')
+        localStorage.clear();
+        localStorage.setItem('Lunch', `${lunch}`);
+        resetInputFeedback();
+    } else {
+        throw new Error('Please add a food that has at least three letters')
+    };
 }).appendTo(lunchComposite);
 
 export default lunchComposite;

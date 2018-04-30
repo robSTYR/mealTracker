@@ -35,9 +35,9 @@ let lunchTextView = new tabris_1.TextView({
 }).appendTo(lunchComposite);
 let lunchMealInput = new textInput_1.default('prev() 10', 15, 15, 30, 'What did you eat for lunch?', true, "send", (text) => {
     let userInput = text;
-    let now = moment().format('MMM Do YY');
+    let now = moment().format('LLLL');
     if (userInput.length >= 3) {
-        localStorage.setItem(`Lunch - ${now}`, `${userInput}`);
+        localStorage.setItem('Lunch', `${userInput}`);
         renderSuccessMessage();
         resetInputFeedback();
     }
@@ -48,12 +48,14 @@ let lunchMealInput = new textInput_1.default('prev() 10', 15, 15, 30, 'What did 
 }).appendTo(lunchComposite);
 let addLunchButton = new button_1.default('lunchButton', 'Add My Lunch', '#ffffff', '#1cef71', 2, 2, 'prev() 20', () => {
     let lunch = lunchMealInput.text;
-    let now = moment().format('LLLL');
     if (lunch.length >= 3) {
-        localStorage.setItem(`Lunch - ${now}`, `${lunch}`);
-        lunchMealInput._text = '';
+        localStorage.clear();
+        localStorage.setItem('Lunch', `${lunch}`);
+        resetInputFeedback();
     }
-    else
+    else {
         throw new Error('Please add a food that has at least three letters');
+    }
+    ;
 }).appendTo(lunchComposite);
 exports.default = lunchComposite;

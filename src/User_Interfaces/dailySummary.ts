@@ -5,24 +5,27 @@ import AddMealButton from '../components/button';
 import Input from '../components/textInput';
 import AppComposite from "../components/composite";
 
-let foodName;
-let calories;
 
-const categoryTypes = {
-    breakfast: `Breakfast - `,
-    lunch: `Lunch - `,
-    dinner: `Dinner - `,
-    dessert: `Dessert - `
-}
-const now = moment().format("MMM Do YY");
+
+enum categoryTypes {
+    breakfast = 'Breakfast',
+    lunch = 'Lunch',
+    dinner = 'Dinner',
+    dessert = 'Dessert',
+};
+
+
 let dataFromStorage;
-const grabDataFromStorage = (date: string, type: string) => {
-     let searchKey = type + date;
-     dataFromStorage = localStorage.getItem(searchKey);
+const grabDataFromStorage = (searchTerm: string): string => {
+     dataFromStorage = localStorage.getItem(searchTerm);
+     console.log(`dataStorage: ${dataFromStorage}`);
      return dataFromStorage;
 };
 
-const fetchDataFromApi = (text: string): void => {
+const fetchDataFromApi = (text: string)  => {
+    let foodName;
+    let calories;
+    let foodDataArr: [{name: string, cals: number}];
     fetch(`https://trackapi.nutritionix.com/v2/search/instant?query=${text}`,
         {
             headers: {
@@ -31,23 +34,24 @@ const fetchDataFromApi = (text: string): void => {
             }
         }).then((response) => response.json())
         .catch((error) => {
-            console.error(error)
+            console.error(error);
         })
         .then((json) => {
-            console.log(json.branded[0])
             foodName = json.branded[0].food_name;
             calories = json.branded[0].nf_calories;
             let foodObj: { name: string, cals: number } = {name: '', cals: 0};
             foodObj.name = foodName;
             foodObj.cals = calories;
-            console.log(foodObj);
+            foodDataArr.push(foodObj);
+            console.log(foodDataArr);
+            return foodDataArr;
         });
 };
 
-let breakfastFoodFromStorage = grabDataFromStorage(now, categoryTypes.breakfast);
-let lunchFromStorage = grabDataFromStorage(now, categoryTypes.lunch);
-let dinnerFromStorage = grabDataFromStorage(now, categoryTypes.dinner);
-let dessertFromStorage = grabDataFromStorage(now, categoryTypes.dessert);
+let breakfastFoodFromStorage = grabDataFromStorage(categoryTypes.breakfast);
+let lunchFromStorage = grabDataFromStorage(categoryTypes.lunch);
+let dinnerFromStorage = grabDataFromStorage(categoryTypes.dinner);
+let dessertFromStorage = grabDataFromStorage(categoryTypes.dessert);
 fetchDataFromApi(breakfastFoodFromStorage);
 fetchDataFromApi(dinnerFromStorage);
 fetchDataFromApi(lunchFromStorage);
